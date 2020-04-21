@@ -8,7 +8,7 @@ def load_content(filename):
 
 setup(
     name="discord-notifier-bot",
-    version="0.1.6",
+    version="0.1.7",
     license="MIT License",
     author="Erik Körner",
     author_email="koerner@informatik.uni-leipzig.de",
@@ -23,12 +23,13 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: POSIX",
         "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Topic :: Utilities",
     ],
     packages=["discord_notifier_bot"],
-    python_requires=">=3.7",
+    python_requires=">=3.6",
     install_requires=["discord.py"],
     entry_points={
         "console_scripts": [

@@ -1,3 +1,4 @@
+====================
 Discord-Notifier-Bot
 ====================
 
@@ -54,6 +55,75 @@ Configuration is done by placing a .dbot.conf file in one of the following direc
 Alternatively a configuration file can be provided via ``-c``/``--config`` CLI options.
 
 The configuration file should be a standard INI file. A template can be found in the ``templates`` folder. All configurations are placed under the ``discord-bot`` section.
+
+Example:
+
+.. code-block:: ini
+
+   [discord-bot]
+   # the bot token (used for login)
+   token = abc
+   # the numeric id of a channel, can be found when activating the developer options in appearances
+   channel = 123
+
+Usage
+-----
+
+``dbot-message`` and ``dbot-file`` are less complex versions of ``dbot-run``.
+
+Print help and available options:
+
+.. code-block:: bash
+
+   dbot-run -h
+
+Sending messages:
+
+.. code-block:: bash
+
+   # send a simple message
+   dbot-run message "Test message"
+   # or shorter:
+   dbot-message "Test **message**"
+
+   # pipe output
+   echo "Test" | dbot-emessage -
+   
+   # wrap it inside a code-block ```
+   # optionally with a type
+   cat `which dbot-message` | dbot-message - --type
+   cat `which dbot-message` | dbot-message - --type python
+
+Sending a file:
+
+.. code-block:: bash
+
+   dbot-file README.rst "Your message to desribe the attached file"
+   # or with no visible message:
+   dbot-file README.rst ""
+
+   # optionally also like this:
+   dbot-run file -f README.rst "Message ..."
+
+You are always able to specify the configuration file like this:
+
+.. code-block:: bash
+
+   dbot-run -c /path/to/dbot.conf [...]
+   dbot-{message,file} -c /path/to/dbot.conf [...]
+
+**Only with** ``dbot-run``: To display debugging information (api calls, log messages etc.):
+
+.. code-block:: bash
+
+   dbot-run -v [...]
+
+You may also run the bot with the python module notation. But it will only run the same entry-point like ``dbot-run``.
+
+.. code-block:: bash
+
+   python -m discord_notifier_bot [...]
+
 
 Bot Creation etc.
 -----------------

@@ -41,6 +41,16 @@ Requirements
 
 * `discord.py <https://github.com/Rapptz/discord.py>`_
 
+
+Installation
+------------
+
+.. code-block:: bash
+
+   python3 -m pip install discord-notifier-bot
+
+Optionally, install it locally with ``--user``.
+
 Configuration
 -------------
 

@@ -39,3 +39,12 @@ See information provided by:
 ## Credits
 
 * [easy-telegram-cli](https://github.com/JaBorst/easy-telegram-cli)
+
+## Copyright and License Information
+
+Copyright (c) 2020 Erik Körner.  All rights reserved.
+
+See the file "LICENSE" for information on the history of this software, terms &
+conditions for usage, and a DISCLAIMER OF ALL WARRANTIES.
+
+All trademarks referenced herein are property of their respective holders.

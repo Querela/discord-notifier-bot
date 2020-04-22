@@ -35,12 +35,18 @@ It registers the following commands:
 * ``dbot-run`` - main CLI entry-point
 * ``dbot-message`` - (short-hand) to send a message, or even pipe `-` message contents
 * ``dbot-file`` - (short-hand) to send a file with an message
+* ``dbot-info`` - (short-hand) to send a message with system information
+  (*extra dependencies have to be installed!*)
 
 Requirements
 ------------
 
 * Python >= 3.6 (*see badges above*)
 * `discord.py <https://github.com/Rapptz/discord.py>`_
+* Extra:
+
+  * ``cpu``: `psutil <https://github.com/giampaolo/psutil>`_
+  * ``gpu``: `GPUtil <https://github.com/anderskm/gputil>`_
 
 Installation
 ------------
@@ -50,6 +56,13 @@ Installation
    python3 -m pip install discord-notifier-bot
 
 Optionally, install it locally with ``--user``.
+
+For system info messages using ``dbot-info`` or ``dbot-run info [...]``, you have to install extra dependencies.
+You can choose between cpu (cpu + disk information) and gpu (``nvidia-smi`` information):
+
+.. code-block:: bash
+
+   python3 -m pip install discord-notifier-bot[cpu,gpu]
 
 Configuration
 -------------

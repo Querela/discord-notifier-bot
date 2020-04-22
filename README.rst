@@ -26,7 +26,7 @@ Discord-Notifier-Bot
 
 .. end-badges
 
-A simple python `Discord <https://discordapp.com/>`_ bot to send messages to discord channel via command line.
+A simple python `Discord <https://discordapp.com/>`_ bot to send messages to Discord channel via command line.
 
 It allows markdown formatted messages and attaching files.
 
@@ -39,8 +39,8 @@ It registers the following commands:
 Requirements
 ------------
 
+* Python >= 3.6 (*see badges above*)
 * `discord.py <https://github.com/Rapptz/discord.py>`_
-
 
 Installation
 ------------
@@ -79,7 +79,7 @@ Example:
 Usage
 -----
 
-``dbot-message`` and ``dbot-file`` are less complex versions of ``dbot-run``.
+``dbot-message`` and ``dbot-file`` are simpler versions of ``dbot-run``.
 
 Print help and available options:
 
@@ -140,8 +140,35 @@ Bot Creation etc.
 
 See information provided by:
 
-* `<https://github.com/Chikachi/DiscordIntegration/wiki/How-to-get-a-token-and-channel-ID-for-Discord>`_
-* `<https://discordapp.com/developers/applications/>`_
+* `Tutorial for setting up a bot <https://github.com/Chikachi/DiscordIntegration/wiki/How-to-get-a-token-and-channel-ID-for-Discord>`_
+* `Discord developer application page <https://discordapp.com/developers/applications/>`_
+
+Short description
+~~~~~~~~~~~~~~~~~
+
+**You have to own a Discord server! Or know someone with administrator/moderation(?) privileges.**
+
+1. Visit and login to the `Discord developer page <https://discordapp.com/developers/applications/>`_.
+#. Create a new application. The given name is also the visible name of the bot. (default, can be changed later?)
+#. Create a bot (on the *Bot* page). You should disable the *Public Bot* option.
+
+   * The bot login token (credentials) can be found on the *Bot* page.
+
+#. Change to the *OAuth2* page and check
+
+   * Scopes: *Bot*
+   * Bot Permissions: *Send Messages*, *Attach Files* (in the *Text Permissions* column)
+
+#. Copy the URL in the *Scopes* section and paste it in a new browser tab.
+
+   * Now you can choose one (?) of your **own** Discord servers to add the bot to.
+     *(For this you need server administration permissions, or be the owner..?)*
+
+To get the channel id, send the following message on your server ``\#channelname``, or enable developer options.
+You may want to visit the following pages for more information:
+
+* `Discord Help <https://support.discordapp.com/hc/de/articles/206346498-Wie-finde-ich-meine-Server-ID->`_,
+* `reddit post <https://www.reddit.com/r/discordapp/comments/50thqr/finding_channel_id/>`_.
 
 Credits
 -------

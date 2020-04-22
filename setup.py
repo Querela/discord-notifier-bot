@@ -8,11 +8,11 @@ def load_content(filename):
 
 setup(
     name="discord-notifier-bot",
-    version="0.1.7",
+    version="0.1.8",
     license="MIT License",
     author="Erik Körner",
     author_email="koerner@informatik.uni-leipzig.de",
-    description="A cli Discord bot to send simple messages to a discord channel.",
+    description="A cli bot to send simple messages to a Discord channel.",
     long_description=load_content("README.rst"),
     long_description_content_type="text/x-rst",
     url="https://github.com/Querela/discord-notifier-bot",

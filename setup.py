@@ -8,7 +8,7 @@ def load_content(filename):
 
 setup(
     name="discord-notifier-bot",
-    version="0.2.0",
+    version="0.2.1",
     license="MIT License",
     author="Erik Körner",
     author_email="koerner@informatik.uni-leipzig.de",
@@ -38,6 +38,7 @@ setup(
             "dbot-message = discord_notifier_bot.cli:main_message",
             "dbot-file = discord_notifier_bot.cli:main_file",
             "dbot-info = discord_notifier_bot.cli:main_info",
+            "dbot-observe = discord_notifier_bot.cli:main_observe",
         ]
     },
 )

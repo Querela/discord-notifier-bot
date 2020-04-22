@@ -180,6 +180,7 @@ Short description
 To get the channel id, send the following message on your server ``\#channelname``, or enable developer options.
 You may want to visit the following pages for more information:
 
+* `discord.py bot help <https://discordpy.readthedocs.io/en/latest/discord.html>`_,
 * `Discord Help <https://support.discordapp.com/hc/de/articles/206346498-Wie-finde-ich-meine-Server-ID->`_,
 * `reddit post <https://www.reddit.com/r/discordapp/comments/50thqr/finding_channel_id/>`_.
 

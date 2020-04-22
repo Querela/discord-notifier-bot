@@ -7,6 +7,7 @@ import sys
 
 from discord_notifier_bot.bot import send_message as bot_send_message
 from discord_notifier_bot.bot import send_file as bot_send_file
+from discord_notifier_bot.bot import run_observer
 from discord_notifier_bot.sysinfo import has_extra_cpu
 from discord_notifier_bot.sysinfo import has_extra_gpu
 from discord_notifier_bot.sysinfo import get_info_message
@@ -106,7 +107,7 @@ def send_file(bot_token, channel_id, message, filename):
 def parse_args(args=None):
     parser = argparse.ArgumentParser()
 
-    actions = ("message", "file")
+    actions = ("message", "file", "observe")
     if has_extra_cpu() or has_extra_gpu():
         actions += ("info",)
 
@@ -137,13 +138,8 @@ def parse_args(args=None):
     return args
 
 
-# ---------------------------------------------------------------------------
-
-
-def main(args=None):
-    args = parse_args(args)
-
-    if args.debug:
+def setup_logging(debug=False):
+    if debug:
         # logging.basicConfig(format="* %(message)s", level=logging.INFO)
         logging.basicConfig(
             format="[%(levelname).1s] {%(name)s} %(message)s", level=logging.DEBUG
@@ -151,6 +147,15 @@ def main(args=None):
         logging.getLogger("websockets.protocol").setLevel(logging.WARNING)
         logging.getLogger("websockets.client").setLevel(logging.WARNING)
         logging.getLogger("discord.client").setLevel(logging.WARNING)
+
+
+# ---------------------------------------------------------------------------
+
+
+def main(args=None):
+    args = parse_args(args)
+
+    setup_logging(args.debug)
 
     configs = load_config(filename=args.config)
     LOGGER.debug(f"Run bot with configs: {configs}")
@@ -256,6 +261,40 @@ def main_info():
 
         message = get_info_message()
         send_message(configs["token"], configs["channel"], message)
+    except:
+        sys.exit(1)
+
+
+def main_observe():
+    try:
+        parser = argparse.ArgumentParser()
+        parser.add_argument(
+            "-c", "--config", type=str, default=None, help="Config file"
+        )
+        parser.add_argument(
+            "-d", "--debug", action="store_true", help="Enable debug logging"
+        )
+        args = parser.parse_args()
+
+        setup_logging(args.debug)
+
+        configs = load_config(filename=args.config)
+        LOGGER.debug(f"Run bot with configs: {configs}")
+
+        if not has_extra_cpu():
+            raise Exception(
+                "Missing extra dependencies for this command! Please install psutil!"
+            )
+
+        if not has_extra_gpu():
+            import warnings
+
+            warnings.warn(
+                "discord-notifier-bot has no extra dependencies installed to support the 'info' function!"
+            )
+            sys.exit(1)
+
+        run_observer(configs["token"], configs["channel"])
     except:
         sys.exit(1)
 

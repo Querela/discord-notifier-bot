@@ -1,6 +1,7 @@
 import datetime
 import os
 import time
+from collections import namedtuple
 from datetime import timedelta
 from functools import lru_cache
 
@@ -196,8 +197,12 @@ def get_gpu_info():
     return info
 
 
+def get_local_machine_name():
+    return os.uname().nodename
+
+
 def get_info_message(with_cpu=True, with_gpu=True):
-    message = f"**Status of `{os.uname().nodename}`**\n"
+    message = f"**Status of `{get_local_machine_name()}`**\n"
     message += f"Date: `{datetime.datetime.now()}`\n\n"
 
     if with_cpu and has_extra_cpu():
@@ -224,6 +229,90 @@ def get_info_message(with_cpu=True, with_gpu=True):
             message += " N/A\n"
 
     return message
+
+
+# ---------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------
+
+
+ObservableLimit = namedtuple(
+    "ObservableLimit", ("name", "fn_retrieve", "fn_check", "threshold", "message")
+)
+
+
+def make_observable_limits():
+    if not has_extra_cpu():
+        return dict()
+
+    # ----------------------------------------------------
+
+    import psutil
+
+    def _get_loadavg():
+        return [x / psutil.cpu_count() * 100 for x in psutil.getloadavg()]
+
+    def _get_mem_util():
+        mem = psutil.virtual_memory()
+        return mem.used / mem.total * 100
+
+    def _get_disk_paths():
+        disks = [
+            disk
+            for disk in psutil.disk_partitions(all=False)
+            if "loop" not in disk.device and not disk.mountpoint.startswith("/boot")
+        ]
+        paths = [disk.mountpoint for disk in disks]
+        return paths
+
+    def _get_disk_usage(path):
+        return psutil.disk_usage(path).percent
+
+    def _get_disk_free_gb(path):
+        return psutil.disk_usage(path).free / 1024 / 1024 / 1024
+
+    # ----------------------------------------------------
+
+    limits = dict()
+
+    limits["cpu_load_1min"] = ObservableLimit(
+        name="CPU-Load-1min",
+        fn_retrieve=lambda: _get_loadavg()[1],
+        fn_check=lambda cur, thres: cur < thres,
+        threshold=90.0,
+        message="**CPU Load Avg [5min]** is too high! (value: `{cur_value}%`, threshold: `{threshold})`",
+    )
+    limits["mem_util"] = ObservableLimit(
+        name="Memory-Utilisation",
+        fn_retrieve=lambda: _get_mem_util(),
+        fn_check=lambda cur, thres: cur < thres,
+        threshold=85.0,
+        message="**Memory Usage** is too high! (value: `{cur_value}%`, threshold: `{threshold})`",
+    )
+
+    for i, path in enumerate(_get_disk_paths()):
+        limits[f"disk_util_perc{i}"] = ObservableLimit(
+            name=f"Disk-Usage-{path}",
+            fn_retrieve=lambda: _get_disk_usage(path),
+            fn_check=lambda cur, thres: cur < thres,
+            threshold=95.0,
+            message=(
+                f"**Disk Usage for `{path}`** is too high! "
+                "(value: `{cur_value}%`, threshold: `{threshold})`"
+            ),
+        )
+        limits[f"disk_util_gb{i}"] = ObservableLimit(
+            name=f"Disk-Space-Free-{path}",
+            fn_retrieve=lambda: _get_disk_free_gb(path),
+            fn_check=lambda cur, thres: cur > thres,
+            threshold=30.0,
+            message=(
+                "No more **Disk Space for `{path}`**! "
+                "(value: `{cur_value}GB`, threshold: `{threshold})`"
+            ),
+        )
+
+    return limits
 
 
 # ---------------------------------------------------------------------------

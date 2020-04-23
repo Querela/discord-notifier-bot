@@ -107,7 +107,7 @@ def send_file(bot_token, channel_id, message, filename):
 def parse_args(args=None):
     parser = argparse.ArgumentParser()
 
-    actions = ("message", "file", "observe")
+    actions = ("message", "file")
     if has_extra_cpu() or has_extra_gpu():
         actions += ("info",)
 

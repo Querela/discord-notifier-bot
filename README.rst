@@ -37,6 +37,8 @@ It registers the following commands:
 * ``dbot-file`` - (short-hand) to send a file with an message
 * ``dbot-info`` - (short-hand) to send a message with system information
   (*extra dependencies have to be installed!*)
+* ``dbot-observe`` - a blocking script, that runs periodic system checks and notifies about shortages
+  (*requires extra dependencies to be installed*)
 
 Requirements
 ------------
@@ -146,6 +148,68 @@ You may also run the bot with the python module notation. But it will only run t
 .. code-block:: bash
 
    python -m discord_notifier_bot [...]
+
+System Observer Bot
+~~~~~~~~~~~~~~~~~~~
+
+As of version **0.2.***, I have included some basic system observation code.
+Besides the ``dbot-info`` command that sends a summary about system information to a Discord channel,
+an *observation service* with ``dbot-observe`` is included.
+The command runs a looping Discord task that checks every **5 min** some predefined system conditions,
+and sends a notification if a ``badness`` value is over a threshold.
+This ``badness`` value serves to either immediatly notify a channel if a system resource is exhausted or after some repeated limit exceedances.
+
+The code (checks and limits) can be found in `discord_notifier_bot.sysinfo <https://github.com/Querela/discord-notifier-bot/blob/master/discord_notifier_bot/sysinfo.py>`_.
+The current limits are some less-than educated guesses, and are subject to change.
+Dynamic configuration is currently not an main issue, so users may need to clone the repo, change values and install the python package from source:
+
+.. code-block:: bash
+
+   git clone https://github.com/Querela/discord-notifier-bot.git
+   cd discord-notifier-bot/
+   # [do the modifications in discord_notifier_bot/sysinfo.py]
+   python3 -m pip install --user --upgrade --editable .[cpu,gpu]
+
+The system information gathering requires the extra dependencies to be installed, at least ``cpu``, optionally ``gpu``.
+
+I suggest that you provide a different Discord channel for those notifications and create an extra ``.dbot-observer.conf`` configuration file that can then be used like this:
+
+.. code-block:: bash
+
+   dbot-observe [-d] -c ~/.dbot-observer.conf
+
+
+Embedded in other scripts
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Sending messages is rather straightforward.
+More complex examples can be found in the CLI entrypoints, see file `discord_notifier_bot.cli <https://github.com/Querela/discord-notifier-bot/blob/master/discord_notifier_bot/cli.py>`_.
+Below are some rather basic examples (extracted from the CLI code).
+
+Basic setup (logging + config loading):
+
+.. code-block:: python
+
+   from discord_notifier_bot.cli import setup_logging, load_config
+
+   # logging (rather basic, if needed)
+   setup_logging(True)
+
+   # load configuration file (provide filename or None)
+   configs = load_config(filename=None)
+
+Sending a message:
+
+.. code-block:: python
+
+   from discord_notifier_bot.bot import send_message
+
+   # message string with basic markdown support
+   message = "The **message** to `send`"
+   # bot token and channel_id (loaded from configs or hard-coded)
+   bot_token, channel_id = configs["token"], configs["channel"]
+   # send the message
+   send_message(bot_token, channel_id, message)
 
 
 Bot Creation etc.

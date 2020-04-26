@@ -5,14 +5,12 @@ import os
 import pathlib
 import sys
 
-from discord_notifier_bot.bot import send_message as bot_send_message
+from discord_notifier_bot.bot import send_message
 from discord_notifier_bot.bot import send_file as bot_send_file
-from discord_notifier_bot.bot import run_observer
-from discord_notifier_bot.sysinfo import has_extra_cpu
-from discord_notifier_bot.sysinfo import has_extra_gpu
-from discord_notifier_bot.sysinfo import get_info_message
+
 
 LOGGER = logging.getLogger(__name__)
+
 
 # ---------------------------------------------------------------------------
 
@@ -58,7 +56,7 @@ def load_config_file(filename):
         }
     except KeyError as ex:
         LOGGER.error(f"Missing configuration key! >>{ex.args[0]}<<")
-    except:
+    except:  # pylint: disable=bare-except
         LOGGER.exception("Loading configuration failed!")
     return None
 
@@ -88,11 +86,6 @@ def load_config(filename=None, **kwargs):
 # ---------------------------------------------------------------------------
 
 
-def send_message(bot_token, channel_id, message):
-    LOGGER.info(f"Send message: {message} ...")
-    bot_send_message(bot_token, channel_id, message)
-
-
 def send_file(bot_token, channel_id, message, filename):
     if not os.path.isfile(filename):
         raise Exception(f"filename '{filename}' is not a file!")
@@ -108,8 +101,6 @@ def parse_args(args=None):
     parser = argparse.ArgumentParser()
 
     actions = ("message", "file")
-    if has_extra_cpu() or has_extra_gpu():
-        actions += ("info",)
 
     parser.add_argument("action", choices=actions, help="Bot action")
     parser.add_argument("message", help="Message to send")
@@ -172,15 +163,10 @@ def main(args=None):
         message = f"```{args.type}\n{message}\n```"
 
     if args.action == "message":
+        LOGGER.info(f"Send message: {message} ...")
         send_message(configs["token"], configs["channel"], message)
     elif args.action == "file":
         send_file(configs["token"], configs["channel"], message, args.file)
-    elif args.action == "info":
-        # gather cpu/gpu infos and send message
-        if message:
-            message += "\n\n"
-        message += get_info_message()
-        send_message(configs["token"], configs["channel"], message)
 
     LOGGER.info("Done.")
 
@@ -217,8 +203,9 @@ def main_message():
             LOGGER.info(f"Wrap message in markdown, type={args.type}")
             message = f"```{args.type}\n{message}\n```"
 
+        LOGGER.info(f"Send message: {message} ...")
         send_message(configs["token"], configs["channel"], message)
-    except:
+    except:  # pylint: disable=bare-except
         sys.exit(1)
 
 
@@ -236,66 +223,7 @@ def main_file():
         LOGGER.debug(f"Run bot with configs: {configs}")
 
         send_file(configs["token"], configs["channel"], args.message, args.file)
-    except:
-        sys.exit(1)
-
-
-def main_info():
-    try:
-        parser = argparse.ArgumentParser()
-        parser.add_argument(
-            "-c", "--config", type=str, default=None, help="Config file"
-        )
-        args = parser.parse_args()
-
-        configs = load_config(filename=args.config)
-        LOGGER.debug(f"Run bot with configs: {configs}")
-
-        if not has_extra_cpu() and not has_extra_gpu():
-            import warnings
-
-            warnings.warn(
-                "discord-notifier-bot has no extra dependencies installed to support the 'info' function!"
-            )
-            sys.exit(1)
-
-        message = get_info_message()
-        send_message(configs["token"], configs["channel"], message)
-    except:
-        sys.exit(1)
-
-
-def main_observe():
-    try:
-        parser = argparse.ArgumentParser()
-        parser.add_argument(
-            "-c", "--config", type=str, default=None, help="Config file"
-        )
-        parser.add_argument(
-            "-d", "--debug", action="store_true", help="Enable debug logging"
-        )
-        args = parser.parse_args()
-
-        setup_logging(args.debug)
-
-        configs = load_config(filename=args.config)
-        LOGGER.debug(f"Run bot with configs: {configs}")
-
-        if not has_extra_cpu():
-            raise Exception(
-                "Missing extra dependencies for this command! Please install psutil!"
-            )
-
-        if not has_extra_gpu():
-            import warnings
-
-            warnings.warn(
-                "discord-notifier-bot has no extra dependencies installed to support the 'info' function!"
-            )
-            sys.exit(1)
-
-        run_observer(configs["token"], configs["channel"])
-    except:
+    except:  # pylint: disable=bare-except
         sys.exit(1)
 
 

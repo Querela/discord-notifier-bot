@@ -35,20 +35,12 @@ It registers the following commands:
 * ``dbot-run`` - main CLI entry-point
 * ``dbot-message`` - (short-hand) to send a message, or even pipe `-` message contents
 * ``dbot-file`` - (short-hand) to send a file with an message
-* ``dbot-info`` - (short-hand) to send a message with system information
-  (*extra dependencies have to be installed!*)
-* ``dbot-observe`` - a blocking script, that runs periodic system checks and notifies about shortages
-  (*requires extra dependencies to be installed*)
 
 Requirements
 ------------
 
 * Python >= 3.6 (*see badges above*)
 * `discord.py <https://github.com/Rapptz/discord.py>`_
-* Extra:
-
-  * ``cpu``: `psutil <https://github.com/giampaolo/psutil>`_
-  * ``gpu``: `GPUtil <https://github.com/anderskm/gputil>`_
 
 Installation
 ------------
@@ -58,13 +50,6 @@ Installation
    python3 -m pip install discord-notifier-bot
 
 Optionally, install it locally with ``--user``.
-
-For system info messages using ``dbot-info`` or ``dbot-run info [...]``, you have to install extra dependencies.
-You can choose between cpu (cpu + disk information) and gpu (``nvidia-smi`` information):
-
-.. code-block:: bash
-
-   python3 -m pip install discord-notifier-bot[cpu,gpu]
 
 Configuration
 -------------
@@ -148,36 +133,6 @@ You may also run the bot with the python module notation. But it will only run t
 .. code-block:: bash
 
    python -m discord_notifier_bot [...]
-
-System Observer Bot
-~~~~~~~~~~~~~~~~~~~
-
-As of version **0.2.***, I have included some basic system observation code.
-Besides the ``dbot-info`` command that sends a summary about system information to a Discord channel,
-an *observation service* with ``dbot-observe`` is included.
-The command runs a looping Discord task that checks every **5 min** some predefined system conditions,
-and sends a notification if a ``badness`` value is over a threshold.
-This ``badness`` value serves to either immediatly notify a channel if a system resource is exhausted or after some repeated limit exceedances.
-
-The code (checks and limits) can be found in `discord_notifier_bot.sysinfo <https://github.com/Querela/discord-notifier-bot/blob/master/discord_notifier_bot/sysinfo.py>`_.
-The current limits are some less-than educated guesses, and are subject to change.
-Dynamic configuration is currently not an main issue, so users may need to clone the repo, change values and install the python package from source:
-
-.. code-block:: bash
-
-   git clone https://github.com/Querela/discord-notifier-bot.git
-   cd discord-notifier-bot/
-   # [do the modifications in discord_notifier_bot/sysinfo.py]
-   python3 -m pip install --user --upgrade --editable .[cpu,gpu]
-
-The system information gathering requires the extra dependencies to be installed, at least ``cpu``, optionally ``gpu``.
-
-I suggest that you provide a different Discord channel for those notifications and create an extra ``.dbot-observer.conf`` configuration file that can then be used like this:
-
-.. code-block:: bash
-
-   dbot-observe [-d] -c ~/.dbot-observer.conf
-
 
 Embedded in other scripts
 ~~~~~~~~~~~~~~~~~~~~~~~~~

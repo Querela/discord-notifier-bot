@@ -8,7 +8,7 @@ def load_content(filename):
 
 setup(
     name="discord-notifier-bot",
-    version="0.2.1",
+    version="0.3.0",
     license="MIT License",
     author="Erik Körner",
     author_email="koerner@informatik.uni-leipzig.de",
@@ -31,14 +31,11 @@ setup(
     packages=["discord_notifier_bot"],
     python_requires=">=3.6",
     install_requires=["discord.py"],
-    extras_require={"cpu": ["psutil"], "gpu": ["gputil"],},
     entry_points={
         "console_scripts": [
             "dbot-run = discord_notifier_bot.cli:main",
             "dbot-message = discord_notifier_bot.cli:main_message",
             "dbot-file = discord_notifier_bot.cli:main_file",
-            "dbot-info = discord_notifier_bot.cli:main_info",
-            "dbot-observe = discord_notifier_bot.cli:main_observe",
         ]
     },
 )

@@ -40,6 +40,7 @@ Requirements
 ------------
 
 * Python >= 3.6 (*see badges above*)
+  (*Python 3.5.3 would technically be possible, but does not support* `PEP 498 f-Strings <https://www.python.org/dev/peps/pep-0498/>`_, *so a large portion of the string formatting would need rewrites.*)
 * `discord.py <https://github.com/Rapptz/discord.py>`_
 
 Installation
@@ -126,7 +127,7 @@ You are always able to specify the configuration file like this:
 
 .. code-block:: bash
 
-   dbot-run -v [...]
+   dbot-run -d [...]
 
 You may also run the bot with the python module notation. But it will only run the same entry-point like ``dbot-run``.
 
@@ -203,6 +204,13 @@ You may want to visit the following pages for more information:
 * `Discord Help <https://support.discordapp.com/hc/de/articles/206346498-Wie-finde-ich-meine-Server-ID->`_,
 * `reddit post <https://www.reddit.com/r/discordapp/comments/50thqr/finding_channel_id/>`_.
 
+Related
+-------
+
+* `Discord-System-Observer-Bot <https://github.com/Querela/discord-system-observer-bot>`_,
+  for observing local machine status and getting messages on resource exhaustion
+  (*former 0.2.x version code, refactored in its own package for cleaner packages*)
+
 Credits
 -------
 
@@ -213,7 +221,7 @@ Copyright and License Information
 
 Copyright (c) 2020 Erik Körner.  All rights reserved.
 
-See the file "LICENSE" for information on the history of this software, terms &
+See the file "`LICENSE <https://github.com/Querela/discord-notifier-bot/blob/master/LICENSE>`_" for information on the history of this software, terms &
 conditions for usage, and a DISCLAIMER OF ALL WARRANTIES.
 
 All trademarks referenced herein are property of their respective holders.

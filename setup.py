@@ -8,7 +8,7 @@ def load_content(filename):
 
 setup(
     name="discord-notifier-bot",
-    version="0.3.2",
+    version="0.3.3",
     license="MIT License",
     author="Erik Körner",
     author_email="koerner@informatik.uni-leipzig.de",

@@ -32,6 +32,10 @@ class SendSingleMessageClient(AbstractSingleActionClient):
     async def do_work(self):
         channel = self.get_channel(self.channel_id)
         LOGGER.info(f"Channel: {channel} {type(channel)} {repr(channel)}")
+        if channel is None:
+            raise Exception(
+                f"Channel with id {self.channel_id} does not seem to exist!"
+            )
 
         result = await channel.send(self.message)
         LOGGER.debug(f"MSG result: {result} {type(result)} {repr(result)}")
@@ -49,6 +53,10 @@ class SendSingleFileMessageClient(AbstractSingleActionClient):
     async def do_work(self):
         channel = self.get_channel(self.channel_id)
         LOGGER.info(f"Channel: {channel} {type(channel)} {repr(channel)}")
+        if channel is None:
+            raise Exception(
+                f"Channel with id {self.channel_id} does not seem to exist!"
+            )
 
         # attach file to message
         result = await channel.send(self.message, file=self.file2send)

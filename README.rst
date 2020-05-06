@@ -135,6 +135,51 @@ You may also run the bot with the python module notation. But it will only run t
 
    python -m discord_notifier_bot [...]
 
+Full CLI help message:
+
+.. code-block:: bash
+
+   usage: dbot-run [-h] [--type [TYPE]] [-f FILE] [-c CONFIG] [-d]
+                   {message,file} message
+
+   positional arguments:
+     {message,file}        Bot action
+     message               Message to send
+
+   optional arguments:
+     -h, --help            show this help message and exit
+     --type [TYPE]         Markdown type for text messages, or default if as flag
+     -f FILE, --file FILE  Optional file to attach to message
+     -c CONFIG, --config CONFIG
+                           Config file
+     -d, --debug           Enable debug logging
+
+.. code-block:: bash
+
+   usage: dbot-file [-h] [-c CONFIG] file message
+   
+   positional arguments:
+     file
+     message
+   
+   optional arguments:
+     -h, --help            show this help message and exit
+     -c CONFIG, --config CONFIG
+                           Config file
+
+.. code-block:: bash
+
+   usage: dbot-message [-h] [-c CONFIG] [--type [TYPE]] message
+   
+   positional arguments:
+     message
+   
+   optional arguments:
+     -h, --help            show this help message and exit
+     -c CONFIG, --config CONFIG
+                           Config file
+     --type [TYPE]         Markdown type, or default if without value
+
 Embedded in other scripts
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -210,6 +255,10 @@ Related
 * `Discord-System-Observer-Bot <https://github.com/Querela/discord-system-observer-bot>`_,
   for observing local machine status and getting messages on resource exhaustion
   (*former 0.2.x version code, refactored in its own package for cleaner packages*)
+* `python-discord-webhook <https://pypi.org/project/discord-webhook/>`_,
+  a python module (+ CLI) to use Discord webhooks to send messages,
+  (*webhooks would be a more restrictive way as they are bound to a single channel
+  and are just a simple HTTP request, so more data friendly. You may want to check it out.*)
 
 Credits
 -------
